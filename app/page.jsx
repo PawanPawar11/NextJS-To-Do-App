@@ -6,7 +6,7 @@ const page = () => {
   return (
     <div className="container">
       <Form />
-      <section className="todoContainer"></section>
+      <section className="todosContainer"></section>
       <TodoItem
         title={"Sample task"}
         description={"This is the description of the sample task"}

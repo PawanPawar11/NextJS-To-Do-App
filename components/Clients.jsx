@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, createContext, useContext } from "react";
 
-const Context = createContext({ user: {} });
+export const Context = createContext({ user: {} });
 
 export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
