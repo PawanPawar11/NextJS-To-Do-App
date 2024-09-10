@@ -1,17 +1,29 @@
-import { connectDB } from "@/utils/features";
+import { checkAuth, connectDB } from "@/utils/features";
 import { Task } from "@/models/task";
+import { asyncError, errorHandler } from "@/middleware/error";
 
-const handler = async (req, res) => {
+const handler = asyncError(async (req, res) => {
+  if (req.method !== "POST")
+    return errorHandler(res, 400, "Post requests are not allowed");
   await connectDB();
 
+  const { title, description } = req.body;
+
+  if (!title || !description)
+    return errorHandler(res, 400, "Please fill all the fields");
+
+  const user = await checkAuth(req);
+  if (!user) return errorHandler(res, 401, "Login first");
+
   await Task.create({
-    title: "Sample text",
-    description: "Sample description regarding title",
-    user: "64e6f1a7e8f0f5a12b2f639c",
+    title,
+    description,
+    user: user._id,
   });
   res.json({
     success: "true",
+    message: "Task Created",
   });
-};
+});
 
 export default handler;
