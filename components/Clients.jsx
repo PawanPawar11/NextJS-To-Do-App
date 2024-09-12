@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, createContext, useContext } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 export const Context = createContext({ user: {} });
 
@@ -9,18 +10,32 @@ export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
   return (
-    <Context.Provider value={{ user, setUser }}>{children}</Context.Provider>
+    <Context.Provider value={{ user, setUser }}>
+      {children}
+      <Toaster />
+    </Context.Provider>
   );
 };
 
 export const LogoutBtn = () => {
-  const LogoutAlert = () => {
-    alert("You are logged out now");
+  const { user, setUser } = useContext(Context);
+
+  const logoutHandler = async () => {
+    try {
+      const res = await fetch("/api/auth/logout");
+
+      const data = await res.json();
+
+      if (!data.success) return toast.error(data.message);
+      setUser({});
+      toast.success(data.message);
+    } catch (error) {
+      return toast.error(error);
+    }
   };
 
-  const { user } = useContext(Context);
-  return user.id ? (
-    <button className="btn" onClick={LogoutAlert}>
+  return user._id ? (
+    <button className="btn" onClick={logoutHandler}>
       Logout
     </button>
   ) : (
