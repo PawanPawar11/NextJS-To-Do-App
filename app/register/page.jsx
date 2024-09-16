@@ -23,7 +23,7 @@ const Page = () => {
           password,
         }),
         headers: {
-          "Context-Type": "application/json",
+          "Content-Type": "application/json",
         },
       });
       const data = await res.json();
