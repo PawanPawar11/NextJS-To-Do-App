@@ -15,8 +15,8 @@ export const cookieSetter = (res, token, set) => {
     "Set-Cookie",
     serialize("token", set ? token : "", {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "None",
-      Secure,
       path: "/",
       maxAge: set ? 15 * 24 * 60 * 60 * 1000 : 0,
     })
